@@ -39,7 +39,7 @@ public class QuizActivity extends Activity {
     }
 
     private void checkAnswer(boolean userPressedTrue) {
-        boolean anwserIsTrue = mQuestionBank[mCurrentIndex].isTrueQuestion();
+        boolean answerIsTrue = mQuestionBank[mCurrentIndex].isTrueQuestion();
 
         int messageResId;
 
