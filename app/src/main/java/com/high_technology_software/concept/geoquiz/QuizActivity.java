@@ -14,6 +14,7 @@ public class QuizActivity extends Activity {
 
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+    private static final String KEY_IS_CHEATER = "isCheater";
 
     private Button mTrueButton;
     private Button mFalseButton;
@@ -93,6 +94,7 @@ public class QuizActivity extends Activity {
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 6);
+            mIsCheater = savedInstanceState.getBoolean(KEY_IS_CHEATER, false);
         }
 
         mCheatButton = (Button)findViewById(R.id.cheat_button);
@@ -122,6 +124,7 @@ public class QuizActivity extends Activity {
         super.onSaveInstanceState(savedInstanceState);
         Log.i(TAG, "onSaveInstanceState(Bundle savedInstanceState)");
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+        savedInstanceState.putBoolean(KEY_IS_CHEATER, mIsCheater);
     }
 
     @Override
