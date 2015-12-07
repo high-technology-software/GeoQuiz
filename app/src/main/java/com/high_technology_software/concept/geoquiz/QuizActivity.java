@@ -15,6 +15,7 @@ public class QuizActivity extends Activity {
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
     private static final String KEY_IS_CHEATER = "isCheater";
+    private static final String KEY_CHEATER_BANK = "cheaterBank";
 
     private Button mTrueButton;
     private Button mFalseButton;
@@ -30,9 +31,11 @@ public class QuizActivity extends Activity {
             new TrueFalse(R.string.question_asia, true)
     };
 
-    private int mCurrentIndex = 0;
+    private boolean[] mCheaterBank = new boolean[] {
+            false, false, false, false, false
+    };
 
-    private boolean mIsCheater;
+    private int mCurrentIndex = 0;
 
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getQuestion();
@@ -44,7 +47,7 @@ public class QuizActivity extends Activity {
 
         int messageResId;
 
-        if (mIsCheater) {
+        if (mCheaterBank[mCurrentIndex]) {
             messageResId = R.string.judgment_toast;
         } else {
             if (userPressedTrue == answerIsTrue) {
@@ -87,14 +90,13 @@ public class QuizActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
-                mIsCheater = false;
                 updateQuestion();
             }
         });
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 6);
-            mIsCheater = savedInstanceState.getBoolean(KEY_IS_CHEATER, false);
+            mCheaterBank = savedInstanceState.getBooleanArray(KEY_CHEATER_BANK);
         }
 
         mCheatButton = (Button)findViewById(R.id.cheat_button);
@@ -116,7 +118,10 @@ public class QuizActivity extends Activity {
         if (data == null) {
             return;
         }
-        mIsCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
+
+        if (data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false)) {
+            mCheaterBank[mCurrentIndex] = true;
+        }
     }
 
     @Override
@@ -124,7 +129,7 @@ public class QuizActivity extends Activity {
         super.onSaveInstanceState(savedInstanceState);
         Log.i(TAG, "onSaveInstanceState(Bundle savedInstanceState)");
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
-        savedInstanceState.putBoolean(KEY_IS_CHEATER, mIsCheater);
+        savedInstanceState.putBooleanArray(KEY_CHEATER_BANK, mCheaterBank);
     }
 
     @Override
